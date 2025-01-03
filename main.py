@@ -1,15 +1,18 @@
 import discord
 import asyncio
 import aiofiles
-from tailer import follow
+from collections import deque
 
 # Replace these with your actual values
 DISCORD_TOKEN = "BOT_TOKEN_ID"
-DISCORD_CHANNEL_ID =   # Replace with the ID of your channel
-LOG_FILE_PATH = 
+DISCORD_CHANNEL_ID = 1234567890  # Replace with the ID of your channel
+LOG_FILE_PATH = "/path/to/log/file.log"
 
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
+
+# A deque to prevent the set from growing indefinitely
+sent_lines = deque(maxlen=100) 
 
 async def tail_and_post():
     """Tail the log file and post relevant lines to Discord asynchronously."""
@@ -33,7 +36,10 @@ async def tail_and_post():
 
                 # Check if the line contains the target string
                 if "tells the guild," in line:
-                    await channel.send(line.strip())
+                    # Remove duplicates by checking if the line was sent already
+                    if line.strip() not in sent_lines:
+                        await channel.send(line.strip())
+                        sent_lines.append(line.strip())  # Add the line to the deque
     except Exception as e:
         print(f"Error while tailing log file: {e}")
 
@@ -48,4 +54,4 @@ async def on_disconnect():
     print("Bot disconnected. Attempting to reconnect...")
 
 # Run the bot
-client.run(DISCORD_TOKEN) 
+client.run(DISCORD_TOKEN)
