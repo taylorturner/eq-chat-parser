@@ -5,8 +5,8 @@ from tailer import follow
 
 # Replace these with your actual values
 DISCORD_TOKEN = "BOT_TOKEN_ID"
-DISCORD_CHANNEL_ID = 1324517426590650459  # Replace with the ID of your channel
-LOG_FILE_PATH = "E:/EQ/THJ/Logs/eqlog_Capo_thj.txt"
+DISCORD_CHANNEL_ID =   # Replace with the ID of your channel
+LOG_FILE_PATH = 
 
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
